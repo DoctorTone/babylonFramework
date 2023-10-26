@@ -5,6 +5,9 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core";
+import { StandardMaterial } from "@babylonjs/core/Materials";
+import { Color3 } from "@babylonjs/core/Maths";
+import { Texture } from "@babylonjs/core/Materials";
 
 import "@babylonjs/loaders/glTF";
 
@@ -41,7 +44,7 @@ export class TestApp {
 
 		// This attaches the camera to the canvas
 		camera.attachControl(this.canvas, true);
-
+		camera.wheelDeltaPercentage = 0.1;
 		// This creates a light, aiming 0,1,0 - to the sky (non-mesh)
 		var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
@@ -54,6 +57,10 @@ export class TestApp {
 			{ width: 6, height: 6 },
 			scene
 		);
+
+		const groundMat = new StandardMaterial("ground");
+		groundMat.diffuseTexture = new Texture("./textures/lightning.jpg");
+		ground.material = groundMat;
 
 		return scene;
 	};
