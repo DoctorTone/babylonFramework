@@ -1,4 +1,7 @@
 import * as BABYLON from "babylonjs";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import "@babylonjs/loaders/glTF";
+
 export class TestApp {
 	engine: BABYLON.Engine;
 	scene: BABYLON.Scene;
@@ -10,16 +13,20 @@ export class TestApp {
 			this.engine.resize();
 		});
 		this.scene = this.createScene();
+		this.loadModels();
 	}
 
-	createScene() {
+	createScene = () => {
 		// This creates a basic Babylon Scene object (non-mesh)
 		var scene = new BABYLON.Scene(this.engine);
 
 		// This creates and positions a free camera (non-mesh)
-		var camera = new BABYLON.FreeCamera(
-			"camera1",
-			new BABYLON.Vector3(0, 5, -10),
+		var camera = new BABYLON.ArcRotateCamera(
+			"camera",
+			BABYLON.Tools.ToRadians(90),
+			BABYLON.Tools.ToRadians(60),
+			10,
+			BABYLON.Vector3.Zero(),
 			scene
 		);
 
@@ -39,16 +46,6 @@ export class TestApp {
 		// Default intensity is 1. Let's dim the light a small amount
 		light.intensity = 0.7;
 
-		// Our built-in 'sphere' shape.
-		var sphere = BABYLON.MeshBuilder.CreateSphere(
-			"sphere",
-			{ diameter: 2, segments: 32 },
-			scene
-		);
-
-		// Move the sphere upward 1/2 its height
-		sphere.position.y = 1;
-
 		// Our built-in 'ground' shape.
 		var ground = BABYLON.MeshBuilder.CreateGround(
 			"ground",
@@ -57,7 +54,16 @@ export class TestApp {
 		);
 
 		return scene;
-	}
+	};
+
+	loadModels = async () => {
+		const model = await SceneLoader.ImportMeshAsync(
+			"",
+			"./models/",
+			"pumpkin.glb",
+			this.scene
+		);
+	};
 
 	run() {
 		this.engine.runRenderLoop(() => {
