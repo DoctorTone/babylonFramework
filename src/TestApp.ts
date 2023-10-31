@@ -7,6 +7,7 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core";
 import { StandardMaterial } from "@babylonjs/core/Materials";
 import { Color3 } from "@babylonjs/core/Maths";
+import { Mesh } from "@babylonjs/core/Meshes";
 import { Texture } from "@babylonjs/core/Materials";
 
 import "@babylonjs/loaders/glTF";
@@ -46,7 +47,7 @@ export class TestApp {
 		camera.attachControl(this.canvas, true);
 		camera.wheelDeltaPercentage = 0.1;
 		// This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-		var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+		var light = new HemisphericLight("light", new Vector3(-3, 1, 0), scene);
 
 		// Default intensity is 1. Let's dim the light a small amount
 		light.intensity = 0.7;
@@ -73,6 +74,11 @@ export class TestApp {
 			this.scene,
 			undefined,
 			".glb"
+		);
+
+		console.log(
+			"Twin = ",
+			model.transformNodes[0].rotate(new Vector3(0, 1, 0), Math.PI / 4)
 		);
 	};
 
