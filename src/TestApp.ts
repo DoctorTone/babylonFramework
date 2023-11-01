@@ -8,13 +8,18 @@ import { MeshBuilder } from "@babylonjs/core";
 import { StandardMaterial } from "@babylonjs/core/Materials";
 import { Color3 } from "@babylonjs/core/Maths";
 import { Mesh } from "@babylonjs/core/Meshes";
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { Texture } from "@babylonjs/core/Materials";
 
 import "@babylonjs/loaders/glTF";
 
+const rotateAxis = new Vector3(0, 1, 0);
+const ROTATION_RATE = 0.0025;
+
 export class TestApp {
 	engine: Engine;
 	scene: Scene;
+	currentModel: TransformNode | undefined;
 
 	constructor(readonly canvas: HTMLCanvasElement) {
 		this.engine = new Engine(canvas);
@@ -76,14 +81,15 @@ export class TestApp {
 			".glb"
 		);
 
-		console.log(
-			"Twin = ",
-			model.transformNodes[0].rotate(new Vector3(0, 1, 0), Math.PI / 4)
-		);
+		this.currentModel = model.transformNodes[0];
+		console.log("Twin = ", model);
 	};
 
 	run() {
 		this.engine.runRenderLoop(() => {
+			const delta = this.engine.getDeltaTime();
+			this.currentModel &&
+				this.currentModel.rotate(rotateAxis, delta * ROTATION_RATE);
 			this.scene.render();
 		});
 	}
